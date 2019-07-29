@@ -2,25 +2,25 @@
 
 Stream Video Web in golang
 
-# 整体设计
+# System Design
 
 ![g0](https://raw.githubusercontent.com/rexllz/VideoWeb/master/img/g0.jpg)
 
 ## RESTful API
 
-* 以http为通信协议，json为数据格式
-* 统一接口
-* 无状态
-* 可缓存
-* 以URL设计API
-* 通过四个不同的method（get、put、post、delete）来区分对资源的crud
-* 返回码返回对资源的描述
+* based on http request / json data format
+* Unified interface
+* no status
+* cacheable
+* API document wit 
+* crud to resource with 4 different method(get,post,delete,put)
+* return code to describe the resource status
 
 ![g1](https://raw.githubusercontent.com/rexllz/VideoWeb/master/img/g1.jpg)
 
-# 项目基础
+# Project Basic
 
-## httprouter
+## Httprouter
 github.com/julienschmidt/httprouter
 
 ```go
@@ -42,16 +42,16 @@ func main()  {
 	http.ListenAndServe(":8000",r)
 }
 ```
-## session保存登陆状态
+## Save Login Status by Session
 create sessions table in DB to save the user login status
 {sessionID, loginName}
-并且设置TTL，定期过期
+also need set TTL
 
-## 主要DB Tables
+## Main DB tables
 
 ![g2](https://raw.githubusercontent.com/rexllz/VideoWeb/master/img/g2.jpg)
 
-在init中创建全局conn，节省开销
+create connect in init function to save resource
 
 ```go
 package dbops
@@ -75,8 +75,8 @@ func init()  {
 }
 ```
 
-避免用加号操作sql，易被攻击
-使用dbConn.prepare("sql")
+avoid write sql with '+'
+use dbConn.prepare("sql")
 
 ```go
 func AddUserCredential(loginName string, pwd string) error {
@@ -119,7 +119,7 @@ func DeleteUser(loginName string,pwd string) error {
 }
 ```
 
-## GoTest规范
+## GoTest Format
 
 * init (dblogin, truncate tables)
 * test
@@ -127,12 +127,9 @@ func DeleteUser(loginName string,pwd string) error {
 
 init -> TestMain
 
-go test 功能，提高了开发和测试的效率。 
-有时会遇到这样的场景： 
-进行测试之前需要初始化操作(例如打开连接)，测试结束后，需要做清理工作(例如关闭连接)等等。这个时候就可以使用TestMain()
+go test function , improve efficient to develop 
 
-测试从TestMain进入，依次执行测试用例，最后从TestMain退出。
-保证既定顺序
+can do some init things and test in order
 
 ```go
 package dbops
