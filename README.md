@@ -47,6 +47,22 @@ create sessions table in DB to save the user login status
 {sessionID, loginName}
 also need set TTL
 
+because the RESTful API is stateless, we use session to save the user's status
+
+Session saved in server , and the sessionId saved in client(cookie), used to check status
+
+![g4](https://raw.githubusercontent.com/rexllz/VideoWeb/master/img/g4.jpg)
+
+**Session Based Authentication**
+In the session based authentication, the server will create a session for the user after the user logs in. The session id is then stored on a cookie on the user’s browser. While the user stays logged in, the cookie would be sent along with every subsequent request. The server can then compare the session id stored on the cookie against the session information stored in the memory to verify user’s identity and sends response with the corresponding state!
+
+![g5](https://raw.githubusercontent.com/rexllz/VideoWeb/master/img/g5.png)
+
+**Token Based Authentication**
+Many web applications use JSON Web Token (JWT) instead of sessions for authentication. In the token based application, the server creates JWT with a secret and sends the JWT to the client. The client stores the JWT (usually in local storage) and includes JWT in the header with every request. The server would then validate the JWT with every request from the client and sends response.
+
+![g6](https://raw.githubusercontent.com/rexllz/VideoWeb/master/img/g6.png)
+
 ## Main DB tables
 
 ![g2](https://raw.githubusercontent.com/rexllz/VideoWeb/master/img/g2.jpg)
@@ -193,6 +209,8 @@ func testRegetUser(t *testing.T)  {
 }
 ```
 ![g3](https://raw.githubusercontent.com/rexllz/VideoWeb/master/img/g3.jpg)
+
+# Stream
 
 
 
