@@ -63,8 +63,6 @@ Many web applications use JSON Web Token (JWT) instead of sessions for authentic
 
 ![g6](https://raw.githubusercontent.com/rexllz/VideoWeb/master/img/g6.png)
 
-
-
 ## Main DB tables
 
 ![g2](https://raw.githubusercontent.com/rexllz/VideoWeb/master/img/g2.jpg)
@@ -211,6 +209,91 @@ func testRegetUser(t *testing.T)  {
 }
 ```
 ![g3](https://raw.githubusercontent.com/rexllz/VideoWeb/master/img/g3.jpg)
+
+## Http Header Response Handler
+
+add a middle ware handler to check the session
+
+```go
+package main
+
+import (
+	"github.com/julienschmidt/httprouter"
+	"net/http"
+)
+
+type middleWareHandler struct {
+	r *httprouter.Router
+}
+
+
+func NewMiddleWareHanler(r *httprouter.Router) http.Handler {
+	m := middleWareHandler{}
+	m.r = r
+	return m
+}
+
+//implement the interface
+func (m middleWareHandler) ServeHTTP(w http.ResponseWriter,r *http.Request) {
+	//check session
+	validateUserSession(r)
+	m.r.ServeHTTP(w,r)
+}
+
+func RegisterHandlers() *httprouter.Router {
+
+	router := httprouter.New()
+	router.POST("/user", CreateUser)
+	router.POST("/user/:user_name", Login)
+
+	return router
+}
+
+
+func main()  {
+
+	r := RegisterHandlers()
+	mh := NewMiddleWareHanler(r)
+	http.ListenAndServe(":8000",mh)
+}
+```
+
+Eg. in create user handler , 
+response the different status row by row  to make sure clinet can get the right information
+
+```go
+func CreateUser(w http.ResponseWriter, r *http.Request, p httprouter.Params)  {
+	//create user is post method which have a body can read
+	res,_ := ioutil.ReadAll(r.Body)
+	ubody := &defs.UserCredential{}
+
+
+	//request body is incorrect
+	if err := json.Unmarshal(res,ubody); err!=nil {
+		sendErrorResponse(w,defs.ErrorRequestBodyParseFailed)
+		return
+	}
+
+	// add this user to DB
+	if err:= dbops.AddUserCredential(ubody.Username, ubody.Pwd); err!=nil{
+		sendErrorResponse(w,defs.ErrorDBError)
+		return
+	}
+
+	//generate new session
+	id := session.GenerateNewSessionId(ubody.Username)
+	//create response body
+	su := &defs.SignedUp{Success:true,SessionId:id}
+
+	if resp,err := json.Marshal(su); err!=nil {
+		sendErrorResponse(w, defs.ErrorInternalFaults)
+		return
+	}else {
+		sendNormalResponse(w,string(resp),201)
+	}
+}
+```
+
 
 # Stream
 
