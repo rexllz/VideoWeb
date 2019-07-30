@@ -63,6 +63,8 @@ Many web applications use JSON Web Token (JWT) instead of sessions for authentic
 
 ![g6](https://raw.githubusercontent.com/rexllz/VideoWeb/master/img/g6.png)
 
+
+
 ## Main DB tables
 
 ![g2](https://raw.githubusercontent.com/rexllz/VideoWeb/master/img/g2.jpg)

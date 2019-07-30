@@ -21,3 +21,9 @@ type Comment struct {
 	Author string
 	Content string
 }
+
+//session struct
+type SimpleSession struct {
+	Username string
+	TTL int64
+}
