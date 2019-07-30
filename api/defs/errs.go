@@ -29,4 +29,20 @@ var (
 		},
 	}
 
+	ErrorDBError = ErroResponse{
+		HttpSC:500,
+		Error:Err{
+			Error:"DB ops failed",
+			ErrorCode:"003",
+		},
+	}
+
+	ErrorInternalFaults = ErroResponse{
+		HttpSC: 500,
+		Error: Err{
+			Error: "Internal service error",
+			ErrorCode: "004",
+		},
+	}
+
 )

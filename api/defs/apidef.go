@@ -7,6 +7,13 @@ type UserCredential struct {
 
 }
 
+//response model
+type SignedUp struct {
+	Success bool `json:"success"`
+	SessionId string `json:"session_id"`
+}
+
+
 //data model
 type VideoInfo struct {
 	Id string
