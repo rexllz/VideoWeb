@@ -66,7 +66,7 @@ func testRegetUser(t *testing.T)  {
 
 func TestVideoWorkFlow(t *testing.T) {
 	clearTables()
-	t.Run("PrepareUser", testAddUserCredential)
+	//t.Run("PrepareUser", testAddUserCredential)
 	t.Run("AddVideo", testAddVideoInfo)
 	t.Run("GetVideo", testGetVideoInfo)
 	t.Run("DelVideo", testDeleteVideoInfo)
