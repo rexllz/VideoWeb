@@ -5,11 +5,11 @@ import (
 	"net/http"
 )
 
-func streamHandler(w http.ResponseWriter, r *http.Request, p httprouter.Param)  {
+func streamHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params)  {
 
 
 }
 
-func uploadHandler()  {
+func uploadHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params)  {
 	
 }
