@@ -338,6 +338,7 @@ func (cl *ConnLimiter) ReleaseConn() {
 	log.Printf("New connection coming: %d", c)
 }
 ```
+Then
 implement the traffic limit in main.go
 
 ```go
