@@ -297,6 +297,8 @@ func CreateUser(w http.ResponseWriter, r *http.Request, p httprouter.Params)  {
 
 # Stream
 
+## Limiter
+
 we need to limit the traffic to avoid some problem
 use bucket-token method to solve this
 
@@ -385,6 +387,26 @@ func main(){
 	http.ListenAndServe(":9000", mh)
 }
 ```
+
+## Play a Video
+
+```go
+func streamHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params)  {
+
+	vid := p.ByName("vid-id")
+	vl := VIDEO_DIR + vid
+
+	video, err := os.Open(vl)
+	if err != nil{
+		sendErrorResponse(w,http.StatusInternalServerError,err.Error())
+		return
+	}
+	w.Header().Set("Content-Type", "video/mp4")
+	http.ServeContent(w, r, "", time.Now(), video)
+	defer video.Close()
+}
+```
+
 
 
 
