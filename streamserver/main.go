@@ -31,12 +31,13 @@ func RegisterHandlers() *httprouter.Router{
 
 	router.GET("/videos/:vid-id", streamHandler)
 	router.POST("/upload/:vid-id",uploadHandler)
+	router.GET("/testpage", testPageHandler)
 
 	return router
 }
 
 func main(){
 	r := RegisterHandlers()
-	mh := NewMiddleWareHandler(r, 2)
+	mh := NewMiddleWareHandler(r, 20)
 	http.ListenAndServe(":9000", mh)
 }
