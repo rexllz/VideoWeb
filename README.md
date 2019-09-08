@@ -407,6 +407,26 @@ func streamHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) 
 }
 ```
 
+## Upload Video
+
+Use html/ template to parse a upload page(html), and upload a video 
+```go
+func testPageHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params){
+
+	t, _ := template.ParseFiles("streamserver/upload.html")
+	t.Execute(w, nil)
+}
+```
+# Scheduler
+
+Using scheduler to finish some Asynchronous tasks
+
+**Scheduler Model**
+
+![g7](https://raw.githubusercontent.com/rexllz/VideoWeb/master/img/g7.jpg)
+
+
+
 
 
 
