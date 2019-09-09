@@ -62,6 +62,7 @@ func VideoClearExecutor(dc dataChan) error {
 				break forloop
 			}
 		}
+
 	errMap.Range(func(key, value interface{}) bool {
 		err = value.(error)
 		if err !=nil {
@@ -72,3 +73,5 @@ func VideoClearExecutor(dc dataChan) error {
 
 	return err
 }
+
+
