@@ -552,6 +552,19 @@ func Start()  {
 }
 ```
 
+The details of the process :
+
+step 1 :
+user -> api service -> delete video
+
+step 2 :
+api service -> scheduler -> write video deletion record 
+
+step 3 :
+create a timer 
+
+step 4 :
+timer -> runner -> read deletion record -> exec -> delete video file 
 
 
 
