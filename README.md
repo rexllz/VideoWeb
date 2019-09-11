@@ -566,6 +566,24 @@ create a timer
 step 4 :
 timer -> runner -> read deletion record -> exec -> delete video file 
 
+When we start a goroutine,  we can use this method to create a block situation
+
+```go
+c := make(chan int)
+	//something
+<- c
+```
+or
+
+```go
+for{
+    //something
+}
+```
+
+
+
+	
 
 
 

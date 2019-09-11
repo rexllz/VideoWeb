@@ -33,7 +33,7 @@ func (w *Worker) startWorker() {
 
 func Start()  {
 
-	r := NewRunner(3, true, VideoClearDispatcher, VideoClearDispatcher)
+	r := NewRunner(3, true, VideoClearDispatcher, VideoClearExecutor)
 	w := NewWorker(3, r)
 	go w.startWorker()
 

@@ -11,7 +11,7 @@ import (
 func deleteVideo(vid string) error {
 
 	err := os.Remove(VIDEO_PATH + vid)
-
+	log.Print("delete ok")
 	if err != nil && !os.IsNotExist(err){
 		log.Printf("Deleting Video File Error : %v", err)
 		return err
