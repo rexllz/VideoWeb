@@ -10,18 +10,24 @@ import (
 
 func deleteVideo(vid string) error {
 
+	println("delete file!")
 	err := os.Remove(VIDEO_PATH + vid)
 	log.Print("delete ok")
+	if os.IsNotExist(err) {
+		log.Printf("file not exist")
+	}
 	if err != nil && !os.IsNotExist(err){
 		log.Printf("Deleting Video File Error : %v", err)
 		return err
 	}
+	log.Printf("delete finish")
 
 	return nil
 }
 
 func VideoClearDispatcher(dc dataChan) error {
 
+	println("read delete record")
 	res, err := dbops.ReadVideoDeletionRecord(3)
 	if err != nil{
 		log.Printf("Video Clear Dispatcher Error : %v", err)
@@ -29,11 +35,14 @@ func VideoClearDispatcher(dc dataChan) error {
 	}
 
 	if len(res) == 0 {
+		println("no record")
 		return errors.New("all task finished")
-	}
 
+	}
+	println("get delete record")
 	for _,id := range res {
 		dc <- id
+		log.Printf("send delete signal : %v to dc",id)
 	}
 
 	return nil
@@ -41,6 +50,7 @@ func VideoClearDispatcher(dc dataChan) error {
 
 func VideoClearExecutor(dc dataChan) error {
 
+	println("executor")
 	errMap := &sync.Map{}
 	var err error
 
@@ -48,6 +58,7 @@ func VideoClearExecutor(dc dataChan) error {
 		for {
 			select {
 			case vid :=<- dc :
+				println("get delete signal")
 				go func(id interface{}) {
 					if err := deleteVideo(id.(string)); err != nil{
 						errMap.Store(id, err)
@@ -59,6 +70,7 @@ func VideoClearExecutor(dc dataChan) error {
 					}
 				}(vid)
 			default:
+				println("no signal to executor")
 				break forloop
 			}
 		}
@@ -70,7 +82,7 @@ func VideoClearExecutor(dc dataChan) error {
 		}
 		return true
 	})
-
+	println(err)
 	return err
 }
 

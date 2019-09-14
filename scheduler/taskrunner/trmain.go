@@ -22,6 +22,7 @@ func (w *Worker) startWorker() {
 	//
 	//}
 
+	println("start worker!")
 	for  {
 		select {
 		// get ticker 's channel signal
@@ -33,6 +34,7 @@ func (w *Worker) startWorker() {
 
 func Start()  {
 
+	println("start!")
 	r := NewRunner(3, true, VideoClearDispatcher, VideoClearExecutor)
 	w := NewWorker(3, r)
 	go w.startWorker()

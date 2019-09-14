@@ -6,7 +6,7 @@ const (
 	READY_TO_EXECUTE = "e"
 	CLOSE = "c"
 
-	VIDEO_PATH = "streamserver/videos"
+	VIDEO_PATH = "streamserver/videos/"
 )
 
 type controlChan chan string

@@ -27,6 +27,8 @@ func (r *Runner) startDispatch() {
 
 	//()means active any time
 	//Anonymous function
+
+	println("start dispatch")
 	defer func() {
 		if !r.longlived {
 			close(r.Controller)
@@ -39,14 +41,16 @@ func (r *Runner) startDispatch() {
 		select {
 		case c :=<- r.Controller:
 			if c == READY_TO_DISPATCH {
+				println("ready to dispatch")
 				err := r.Dispatcher(r.Data)
 				if err != nil {
 					r.Error <- CLOSE
 				}else {
-					r.Controller <- READY_TO_DISPATCH
+					r.Controller <- READY_TO_EXECUTE
 				}
 			}
 			if c == READY_TO_EXECUTE {
+				println("ready to execute")
 				err := r.Executor(r.Data)
 				if err != nil {
 					r.Error <- CLOSE
@@ -56,10 +60,12 @@ func (r *Runner) startDispatch() {
 			}
 
 		case e :=<- r.Error:
+			println("something err")
 			if e == CLOSE {
 				return
 			}
 		default:
+			println("runner default")
 		}
 	}
 }
