@@ -583,3 +583,6 @@ for{
 
 # FontEnd
 
+template engine can transfer the elements to the final page
+Golang has 2 :
+html/template   and   text/template    (dynamic generate)
