@@ -586,3 +586,26 @@ for{
 template engine can transfer the elements to the final page
 Golang has 2 :
 html/template   and   text/template    (dynamic generate)
+
+So, how to use this template?
+the following code merge the html and dynamic elements together 
+```html
+<div class="topnav">
+    <a class="active" href="#home">Home</a>
+    <a href="#news">{{.Name}}</a>
+    <a href="#about">Help</a>
+```
+```go
+func homeHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)  {
+
+	p := &HomePage{Name:"test"}
+	t,e := template.ParseFiles("web/template/home.html")
+	if e != nil {
+		log.Printf("Parsing template home.html err %s", e)
+		return
+	}
+	//merge the p(name) and template together
+	t.Execute(w, p)
+}
+```
+
