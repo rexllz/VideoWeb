@@ -31,7 +31,4 @@ func homeHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)  
 		http.Redirect(w,r,"/userhome",http.StatusFound)
 		return
 	}
-
-
-
 }
