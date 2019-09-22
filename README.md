@@ -611,7 +611,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)  
 
 We can get some info from request cookie:
 
-if we can not get the correct info from cookie , we need goto the login page
+if we can not get the correct info from cookie , we need goto the login page, and if we have the login info, the user should be lead to the userhome page (user redirect function)
 
 ```go
 func homeHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)  {
@@ -634,6 +634,39 @@ func homeHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)  
 		http.Redirect(w,r,"/userhome",http.StatusFound)
 		return
 	}
+}
+```
+
+the same things for the situation where user request the /userhome, maybe we need to lead the user to the home page
+
+```go
+func userHomeHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)  {
+
+	cname, err1 := r.Cookie("username")
+	_,err2 := r.Cookie("session")
+
+	if err1 != nil || err2 != nil{
+		http.Redirect(w,r,"/",http.StatusFound)
+		return
+	}
+	fname := r.FormValue("username")
+	
+	//get the user info and refresh the page
+	//if the cookie has no info, go to the form value find it
+	var p *UserPage
+	if len(cname.Value) != 0 {
+		p = &UserPage{Name:cname.Value}
+	}else if len(fname) != 0 {
+		p = &UserPage{Name:fname}
+	}
+
+	t,e := template.ParseFiles("./web/template/userhome.html")
+	if e != nil {
+		log.Printf("Parsing userhome.html error %s",e)
+		return
+	}
+
+	t.Execute(w,p)
 }
 ```
 
