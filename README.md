@@ -677,3 +677,96 @@ func userHomeHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 
 To solve the CORS problem, we can transfer the user's request to the local server first, and then the server will request another server from different ip or port.
 
+We use apihandler to finish this.
+
+```go
+// we need this handler transfer the request to another server to avoid CORS problem
+func apiHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)  {
+
+	//before we handle the request , we must check it first
+	if r.Method != http.MethodPost{
+		re,_ := json.Marshal(ErrorRequestNotRecognize)
+		io.WriteString(w,string(re))
+		return
+	}
+
+	res,_ := ioutil.ReadAll(r.Body)
+	apibody := &ApiBody{}
+	if err := json.Unmarshal(res,apibody); err != nil{
+		re, _ := json.Marshal(ErrorBodyParseFailed)
+		io.WriteString(w,string(re))
+	}
+
+	request(apibody,w,r)
+	defer r.Body.Close()
+}
+```
+
+Then finish the client code:
+
+```go
+var httpClient *http.Client
+
+func init()  {
+	httpClient = &http.Client{}
+}
+
+func request(b *ApiBody, w http.ResponseWriter, r *http.Request)  {
+
+	var resp *http.Response
+	var err error
+
+	//the body has three methods
+	switch b.Method {
+	case http.MethodGet:
+		//first , prepare the request
+		//second , send the request (by client.do) to the api server
+		req, _ := http.NewRequest("GET",b.Url,nil)
+		req.Header = r.Header
+		resp, err = httpClient.Do(req)
+		if err != nil{
+			log.Printf(err.Error())
+			return
+		}
+		normalResponse(w,resp)
+	case http.MethodPost:
+		req, _ := http.NewRequest("POST",b.Url,bytes.NewBuffer([]byte(b.ReqBody)))
+		req.Header = r.Header
+		resp, err = httpClient.Do(req)
+		if err != nil{
+			log.Printf(err.Error())
+			return
+		}
+		normalResponse(w,resp)
+	case http.MethodDelete:
+		req, _ := http.NewRequest("DELETE",b.Url,nil)
+		req.Header = r.Header
+		resp, err = httpClient.Do(req)
+		if err != nil{
+			log.Printf(err.Error())
+			return
+		}
+		normalResponse(w,resp)
+	default:
+		w.WriteHeader(http.StatusBadRequest)
+		io.WriteString(w,"Bad api request")
+		return
+	}
+}
+
+// this function transfer the response from api server to the local system response
+func normalResponse(w http.ResponseWriter, r *http.Response)  {
+	//check response first
+	res, err := ioutil.ReadAll(r.Body)
+	if err != nil{
+		re, _ := json.Marshal(ErrorInternalFaults)
+		w.WriteHeader(500)
+		io.WriteString(w, string(re))
+	}
+	w.WriteHeader(r.StatusCode)
+	io.WriteString(w,string(res))
+}
+```
+
+
+
