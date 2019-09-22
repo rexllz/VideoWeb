@@ -583,12 +583,15 @@ for{
 
 # FontEnd
 
+## Golang fontend template 
+
 template engine can transfer the elements to the final page
 Golang has 2 :
 html/template   and   text/template    (dynamic generate)
 
 So, how to use this template?
 the following code merge the html and dynamic elements together 
+
 ```html
 <div class="topnav">
     <a class="active" href="#home">Home</a>
@@ -669,4 +672,8 @@ func userHomeHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 	t.Execute(w,p)
 }
 ```
+
+## CORS Problem
+
+To solve the CORS problem, we can transfer the user's request to the local server first, and then the server will request another server from different ip or port.
 

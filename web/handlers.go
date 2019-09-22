@@ -1,8 +1,11 @@
 package main
 
 import (
+	"encoding/json"
 	"github.com/julienschmidt/httprouter"
 	"html/template"
+	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 )
@@ -64,3 +67,49 @@ func userHomeHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 
 	t.Execute(w,p)
 }
+
+// we need this handler transfer the request to another server to avoid CORS problem
+func apiHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)  {
+
+	//before we handle the request , we must check it first
+	if r.Method != http.MethodPost{
+		re,_ := json.Marshal(ErrorRequestNotRecognize)
+		io.WriteString(w,string(re))
+		return
+	}
+
+	res,_ := ioutil.ReadAll(r.Body)
+	apibody := &ApiBody{}
+	if err := json.Unmarshal(res,apibody); err != nil{
+		re, _ := json.Marshal(ErrorBodyParseFailed)
+		io.WriteString(w,string(re))
+	}
+
+	request(apibody,w,r)
+	defer r.Body.Close()
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
