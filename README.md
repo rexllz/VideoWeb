@@ -675,6 +675,8 @@ func userHomeHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 
 ## CORS Problem
 
+cross origin resource sharing
+
 To solve the CORS problem, we can transfer the user's request to the local server first, and then the server will request another server from different ip or port.
 
 We use apihandler to finish this.
@@ -766,6 +768,12 @@ func normalResponse(w http.ResponseWriter, r *http.Response)  {
 	w.WriteHeader(r.StatusCode)
 	io.WriteString(w,string(res))
 }
+```
+
+API request transfer can solve some CORS situations but not all, eg. upload a file , we can not transfer a file in the http body, so we need another method : proxy transfer
+
+```go
+router.POST("/upload/:vid-id", proxyHandler)
 ```
 
 
