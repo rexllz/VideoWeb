@@ -4,6 +4,8 @@ import (
 	"crypto/rand"
 	"fmt"
 	"io"
+	"strconv"
+	"time"
 )
 
 func NewUUID() (string, error) {
@@ -18,3 +20,17 @@ func NewUUID() (string, error) {
 	uuid[6] = uuid[6]&^0xf0 | 0x40
 	return fmt.Sprintf("%x-%x-%x-%x-%x", uuid[0:4], uuid[4:6], uuid[6:8], uuid[8:10], uuid[10:]), nil
 }
+
+func GetCurrentTimestampSec() int{
+	ts, _ := strconv.Atoi(strconv.FormatInt(time.Now().UnixNano()/1000000000, 10))
+	return ts
+}
+
+//func SendDeleteVideoRequest(id string) {
+//	addr := config.GetLbAddr() + ":9001"
+//	url := "http://" + addr + "/video-delete-record/" + id
+//	_, err := http.Get(url)
+//	if err != nil {
+//		log.Printf("Sending deleting video request error: %s", err)
+//	}
+//}

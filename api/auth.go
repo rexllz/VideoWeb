@@ -1,6 +1,7 @@
 package main
 
 import (
+	"VideoWeb/api/defs"
 	"VideoWeb/api/session"
 	"net/http"
 )
@@ -24,11 +25,12 @@ func validateUserSession(r *http.Request) bool {
 	return true
 }
 
-func validateUser(w http.ResponseWriter, r http.Request) bool {
-
+func ValidateUser(w http.ResponseWriter, r *http.Request) bool {
 	uname := r.Header.Get(HEADER_FIELD_UNAME)
-	if len(uname)==0 {
+	if len(uname) == 0 {
+		sendErrorResponse(w, defs.ErrorNotAuthUser)
 		return false
 	}
+
 	return true
 }
