@@ -501,8 +501,6 @@ func ShowComments(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 }
 ```
 
-
-
 # Stream
 
 ## Limiter
